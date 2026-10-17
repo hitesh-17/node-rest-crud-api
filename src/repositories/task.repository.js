@@ -2,6 +2,8 @@ import {randomUUID} from "node:crypto";
 
 const task = new Map();
 
+let nextId = 1;
+
 function seed() {
     const samples = [
     { title: "Learn Express", description: "Routes and middleware", status: "in_progress" },
@@ -11,18 +13,17 @@ function seed() {
 
   for (const s of samples){
     const now = new Date().toISOString();
-    const id = randomUUID();
+    const id = nextId++;
     task.set(id,{id,...s,createdAt:now,updatedAt:now})
   }
 }
-
 seed();
 
 export const taskRepository = {
     findall(){
         return [...task.values()];
     },
-    findByID(id){
+    findByID(id){       
         return task.get(id) ?? null;
     }
 }
