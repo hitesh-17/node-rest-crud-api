@@ -1,5 +1,3 @@
-import {randomUUID} from "node:crypto";
-
 const task = new Map();
 
 let nextId = 1;
@@ -20,7 +18,7 @@ function seed() {
 seed();
 
 export const taskRepository = {
-    findall(){
+    findAll(){
         return [...task.values()];
     },
     findByID(id){       
