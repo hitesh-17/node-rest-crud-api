@@ -10,11 +10,14 @@ export const taskController = {
     const sortBy = req.query.sortBy ?? "createdAt";
     const order = req.query.order ?? "asc";
 
+    if (!Number.isInteger(page) || page < 1)
+      throw new AppError("page must be an integer >= 1", 400);
+
     if (!Number.isInteger(limit) || limit < 1 || limit > 50)
       throw new AppError("limit must be an integer between 1 and 50", 400);
 
-    if (!field.includes(sortBy))
-      throw new AppError(`sortBy must be one of: ${field.join(", ")}`, 400);
+    if (!SORTABLE_FIELDS.includes(sortBy))
+      throw new AppError(`sortBy must be one of: ${SORTABLE_FIELDS.join(", ")}`, 400);
 
     if (order !== "asc" && order !== "desc")
       throw new AppError("order must be 'asc' or 'desc'", 400);
@@ -36,6 +39,13 @@ export const taskController = {
     return res.status(200).json({
       message: "Get data by ID",
       data: dataByID,
+    });
+  },
+  create(req, res) {
+    const result = taskService.createTask(req.body);
+    return res.status(201).json({
+      message: "data created successfully",
+      data: result,
     });
   },
 };
