@@ -36,4 +36,8 @@ export const taskService = {
     }
     return task;
   },
+
+  createTask(data){
+    return taskRepository.create(data);
+  },
 };
