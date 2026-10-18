@@ -6,7 +6,7 @@ function seed() {
     const samples = [
     { title: "Learn Express", description: "Routes and middleware", status: "in_progress" },
     { title: "Write README", description: "Six-part standard", status: "todo" },
-    { title: "Set up CI", description: "GitHub Actions", status: "todo" },
+    { title: "a Set up CI", description: "GitHub Actions", status: "todo" },
   ];
 
   for (const s of samples){
