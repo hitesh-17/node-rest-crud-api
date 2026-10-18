@@ -40,4 +40,21 @@ export const taskService = {
   createTask(data){
     return taskRepository.create(data);
   },
+  replaceByID(id,data){
+    const task = taskRepository.replace(id,data);
+    if (task === null) {
+      throw new AppError("Task not found", 404);
+    }
+    return task;
+  },
+  updateByID(id,data){
+    if(data === true){
+      throw new AppError("Nothing to change", 404);
+    }
+    const task = taskRepository.update(id,data);
+    if (task === null) {
+      throw new AppError("Task not found", 404);
+    }
+    return task;
+  }
 };
