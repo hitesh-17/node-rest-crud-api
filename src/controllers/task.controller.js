@@ -17,7 +17,10 @@ export const taskController = {
       throw new AppError("limit must be an integer between 1 and 50", 400);
 
     if (!SORTABLE_FIELDS.includes(sortBy))
-      throw new AppError(`sortBy must be one of: ${SORTABLE_FIELDS.join(", ")}`, 400);
+      throw new AppError(
+        `sortBy must be one of: ${SORTABLE_FIELDS.join(", ")}`,
+        400,
+      );
 
     if (order !== "asc" && order !== "desc")
       throw new AppError("order must be 'asc' or 'desc'", 400);
@@ -45,6 +48,22 @@ export const taskController = {
     const result = taskService.createTask(req.body);
     return res.status(201).json({
       message: "data created successfully",
+      data: result,
+    });
+  },
+
+  replace(req, res) {
+    const result = taskService.replaceByID(req.taskID,req.body);
+    return res.status(200).json({
+      message: "data updated successfully",
+      data: result,
+    });
+  },
+
+  update(req, res) {
+    const result = taskService.updateByID(req.taskID,req.body);
+    return res.status(200).json({
+      message: "data updated successfully",
       data: result,
     });
   },
