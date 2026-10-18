@@ -13,12 +13,14 @@ router.post('/',validate(createTaskSchema),taskController.create);
 router.put('/:id',validate(putTaskSchema), taskController.replace);
 router.patch('/:id',validate(partialTaskSchema),taskController.update);
 
+router.delete('/:id',taskController.remove);
+
 router.param("id",(req,res,next,value)=>{
     const id = Number(value);
     if(!Number.isInteger(id) || id<1){
         return next(new AppError("Invalid Task Id",400))
     }
-    req.taskID = id;
+    req.taskId = id;
     next();
 })
 
