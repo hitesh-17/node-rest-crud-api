@@ -1,3 +1,5 @@
+import { AppError } from "../utils/AppError.js";
+
 const tasks = new Map();
 
 let nextId = 1;
@@ -33,5 +35,28 @@ export const taskRepository = {
     const newTasks = { id: nextId++, ...data, createdAt: now, updatedAt: now };
     tasks.set(newTasks.id, newTasks);
     return newTasks;
+  },
+  replace(id, data) {
+    const existing = tasks.get(id);
+    if (!existing) return null;
+    const updated = {
+      id,
+      ...data,
+      createdAt: existing.createdAt,
+      updatedAt: new Date().toISOString(),
+    };
+    tasks.set(id, updated);
+    return updated;
+  },
+  update(id, data) {
+    const existing = tasks.get(id);
+    if (!existing) return null;
+    const updated = {
+      ...existing,
+      ...data,
+      updatedAt: new Date().toISOString(),
+    };
+    tasks.set(id, updated);
+    return updated;
   },
 };
