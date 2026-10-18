@@ -59,4 +59,10 @@ export const taskRepository = {
     tasks.set(id, updated);
     return updated;
   },
+  remove(id){
+    const existing = tasks.get(id);
+    if (!existing) return null;
+    tasks.delete(id);
+    return existing;
+  }
 };

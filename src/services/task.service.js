@@ -56,5 +56,12 @@ export const taskService = {
       throw new AppError("Task not found", 404);
     }
     return task;
+  },
+  removeByID(id){
+    const task = taskRepository.remove(id);
+    if (task === null) {
+      throw new AppError("Task not found", 404);
+    }
+    return task;
   }
 };
