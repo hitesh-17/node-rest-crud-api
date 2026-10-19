@@ -28,7 +28,7 @@ export const taskController = {
     console.log(req.headers.accept);
     const data = taskService.getAllTask({ page, limit, sortBy, order });
 
-    const payload = {message:"Get All the Data",data:data.data,meta:data.meta}
+    const payload = {message:"Get All the Data",data:data.data,meta:data.meta,"task"}
     return respond(req,res,200,payload);
   },
   getOne(req, res) {
