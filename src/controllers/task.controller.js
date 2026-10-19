@@ -33,12 +33,7 @@ export const taskController = {
     });
   },
   getOne(req, res) {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id) || id < 1) {
-      throw new AppError("Invalid task id", 400);
-    }
-
-    const dataByID = taskService.getTaskByID(id);
+    const dataByID = taskService.getTaskByID(req.taskId);
     return res.status(200).json({
       message: "Get data by ID",
       data: dataByID,
@@ -53,7 +48,7 @@ export const taskController = {
   },
 
   replace(req, res) {
-    const result = taskService.replaceByID(req.taskId,req.body);
+    const result = taskService.replaceByID(req.taskId, req.body);
     return res.status(200).json({
       message: "data updated successfully",
       data: result,
@@ -61,15 +56,15 @@ export const taskController = {
   },
 
   update(req, res) {
-    const result = taskService.updateByID(req.taskId,req.body);
+    const result = taskService.updateByID(req.taskId, req.body);
     return res.status(200).json({
       message: "data updated successfully",
       data: result,
     });
   },
 
-  remove(req,res){
+  remove(req, res) {
     taskService.removeByID(req.taskId);
-    return res.status(204).send()
-  }
+    return res.status(204).send();
+  },
 };
