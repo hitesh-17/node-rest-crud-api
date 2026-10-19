@@ -1,5 +1,6 @@
 import { taskService } from "../services/task.service.js";
 import { AppError } from "../utils/AppError.js";
+import { respond } from "../utils/respond.js";
 
 const SORTABLE_FIELDS = ["createdAt", "title", "status"];
 
@@ -24,43 +25,37 @@ export const taskController = {
 
     if (order !== "asc" && order !== "desc")
       throw new AppError("order must be 'asc' or 'desc'", 400);
-
+    console.log(req.headers.accept);
     const data = taskService.getAllTask({ page, limit, sortBy, order });
-    return res.status(200).json({
-      message: "Get ALL the Data",
-      data: data.data,
-      meta: data.meta,
-    });
+
+    const payload = {message:"Get All the Data",data:data.data,meta:data.meta,"task"}
+    return respond(req,res,200,payload);
   },
   getOne(req, res) {
     const dataByID = taskService.getTaskByID(req.taskId);
-    return res.status(200).json({
-      message: "Get data by ID",
-      data: dataByID,
-    });
+
+    const payload = {message:"Get data by ID",data:dataByID};
+    return respond(req,res,200,payload);
   },
   create(req, res) {
+
     const result = taskService.createTask(req.body);
-    return res.status(201).json({
-      message: "data created successfully",
-      data: result,
-    });
+    const payload = {message:"data created successfully",data:result}
+    return respond(req,res,201,payload);
   },
 
   replace(req, res) {
     const result = taskService.replaceByID(req.taskId, req.body);
-    return res.status(200).json({
-      message: "data updated successfully",
-      data: result,
-    });
+
+    const payload = {message:"data replaced successfully",data:result}
+    return respond(req,res,200,payload);
   },
 
   update(req, res) {
     const result = taskService.updateByID(req.taskId, req.body);
-    return res.status(200).json({
-      message: "data updated successfully",
-      data: result,
-    });
+
+    const payload = {message:"data updated successfully",data:result}
+    return respond(req,res,200,payload);
   },
 
   remove(req, res) {
