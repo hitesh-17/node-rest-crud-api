@@ -69,7 +69,7 @@ Postman collection: `docs/task-api.postman_collection.json`
 
 ## 5. Decisions and trade-offs
 
-Full notes are in [docs/decisions.md](docs/decisions.md). The main ones:
+The main ones:
 
 - **Repository layer over in-memory storage:** the service never knows how data is stored, so switching to PostgreSQL later changes one file. The trade-off is that data is lost on restart.
 - **Numeric auto-increment IDs:** simple to test and similar to SQL. A malformed id returns 400, and a valid id that doesn't exist returns 404.
