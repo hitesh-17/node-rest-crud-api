@@ -157,6 +157,10 @@ components:
         title: { type: string, minLength: 1, maxLength: 100 }
         description: { type: string, maxLength: 500 }
         status: { type: string, enum: [todo, in_progress, done] }
+      example:
+        title: Rewrite README
+        description: Add the six-part standard
+        status: in_progress
     PatchTask:
       type: object
       minProperties: 1
@@ -164,6 +168,8 @@ components:
         title: { type: string, minLength: 1, maxLength: 100 }
         description: { type: string, maxLength: 500 }
         status: { type: string, enum: [todo, in_progress, done] }
+      example:
+        status: done
     Error:
       type: object
       properties:
