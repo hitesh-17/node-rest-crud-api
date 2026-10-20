@@ -1,0 +1,185 @@
+openapi: 3.0.3
+info:
+  title: Task API
+  version: 1.0.0
+  description: CRUD API for tasks with validation, pagination, sorting and JSON/XML output.
+servers:
+  - url: http://localhost:3000/api/v1
+
+paths:
+  /tasks:
+    get:
+      summary: List tasks
+      parameters:
+        - { name: page, in: query, schema: { type: integer, minimum: 1, default: 1 } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 50, default: 10 } }
+        - { name: sortBy, in: query, schema: { type: string, enum: [createdAt, title, status], default: createdAt } }
+        - { name: order, in: query, schema: { type: string, enum: [asc, desc], default: asc } }
+        - { name: format, in: query, schema: { type: string, enum: [json, xml], default: json } }
+      responses:
+        "200":
+          description: A page of tasks
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskList"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/TaskList"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+    post:
+      summary: Create a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTask"
+      responses:
+        "201":
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /tasks/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer, minimum: 1 }
+    get:
+      summary: Get one task
+      responses:
+        "200":
+          description: The task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      summary: Replace a task (all fields required)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutTask"
+      responses:
+        "200":
+          description: The replaced task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      summary: Update some fields of a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchTask"
+      responses:
+        "200":
+          description: The updated task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      summary: Delete a task
+      responses:
+        "204":
+          description: Deleted, no content
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        title: { type: string, example: Learn Express }
+        description: { type: string, example: Routes and middleware }
+        status: { type: string, enum: [todo, in_progress, done] }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    TaskResponse:
+      type: object
+      properties:
+        message: { type: string }
+        data: { $ref: "#/components/schemas/Task" }
+    TaskList:
+      type: object
+      properties:
+        message: { type: string }
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Task" }
+        meta:
+          type: object
+          properties:
+            page: { type: integer }
+            limit: { type: integer }
+            total: { type: integer }
+            totalPages: { type: integer }
+    CreateTask:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 100, example: Learn Zod }
+        description: { type: string, maxLength: 500 }
+        status: { type: string, enum: [todo, in_progress, done], default: todo }
+    PutTask:
+      type: object
+      required: [title, status]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 100 }
+        description: { type: string, maxLength: 500 }
+        status: { type: string, enum: [todo, in_progress, done] }
+    PatchTask:
+      type: object
+      minProperties: 1
+      properties:
+        title: { type: string, minLength: 1, maxLength: 100 }
+        description: { type: string, maxLength: 500 }
+        status: { type: string, enum: [todo, in_progress, done] }
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message: { type: string }
+            statusCode: { type: integer }
+  responses:
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    NotFound:
+      description: Task not found
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
